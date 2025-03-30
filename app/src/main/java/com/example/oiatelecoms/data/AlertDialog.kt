@@ -1,5 +1,6 @@
 package com.example.oiatelecoms.data
 
+import android.app.AlertDialog
 import android.view.KeyEvent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -25,6 +26,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -150,6 +152,46 @@ fun AirtimeAlertDialog(
     }
 
 }
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LoginSuccessful(modifier: Modifier= Modifier, onDismissRequest: () -> Unit){
+    AlertDialog(onDismissRequest = onDismissRequest) {
+        Card(
+            modifier = modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = null, tint = Color.Green, modifier = modifier.size(60.dp))
+                Text("Login Successful")
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LoginUnSuccessful(modifier: Modifier= Modifier, onDismissRequest: () -> Unit){
+    AlertDialog(onDismissRequest = onDismissRequest) {
+        Card(
+            modifier = modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(imageVector = Icons.Filled.Cancel, contentDescription = null, tint = Color.Red, modifier = modifier.size(60.dp))
+                Text("Login Unsuccessful")
+            }
+        }
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -333,6 +375,7 @@ fun PasswordVerificationFailedDialog(
         }
     }
 }
+
 
 @Composable
 fun PinInputField(

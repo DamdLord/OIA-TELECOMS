@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
@@ -29,17 +30,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.FragmentActivity
 import com.example.oiatelecoms.screens.CableTVPage
 import com.example.oiatelecoms.ui.theme.OIATELECOMSTheme
 import com.example.oiatelecoms.ui.theme.useAnotherColor
 
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -47,6 +50,7 @@ class MainActivity : ComponentActivity() {
             OIATELECOMSTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MainApp(
+                        activity = this,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -55,13 +59,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
 @Composable
 fun TopAppBar(
@@ -76,7 +73,8 @@ fun TopAppBar(
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = 20.dp, start = 5.dp, end = 5.dp, bottom = 5.dp)
+            .padding(5.dp)
+            //.padding(top = 20.dp, start = 5.dp, end = 5.dp, bottom = 5.dp)
     ) {
         AnimatedVisibility(visible = if(currentScreen != Routes.HOME && currentScreen != Routes.LOGIN && currentScreen != Routes.REGISTER && currentScreen != Routes.SIGNUP && currentScreen != Routes.SECOND_REGISTER && currentScreen != Routes.RECOVER_PASSWORD && currentScreen != Routes.HISTORY && currentScreen != Routes.PROFILE ){ true} else{false}) {
             IconButton(onClick = onBackPressed) {
@@ -90,10 +88,9 @@ fun TopAppBar(
         }
         Image(
             painter = painterResource(id = R.drawable.telecompicture),
-            //contentScale = ContentScale.Crop,
+            contentScale = ContentScale.Crop,
             contentDescription = null,
-            modifier =  modifier.size(50.dp)
-           // modifier = modifier.height(100.dp)
+            modifier =  modifier.size(50.dp).clip(CircleShape)
         )
         Spacer(modifier = modifier.width(10.dp))
         Text(
@@ -102,7 +99,7 @@ fun TopAppBar(
             fontSize = 22.sp
         )
         Spacer(modifier = modifier.width(5.dp))
-        AnimatedVisibility(visible = if (currentScreen != Routes.LOGIN && currentScreen != Routes.REGISTER && currentScreen != Routes.SIGNUP && currentScreen != Routes.SECOND_REGISTER && currentScreen != Routes.RECOVER_PASSWORD){true}else{false}) {
+        AnimatedVisibility(visible = if (currentScreen != Routes.LOGIN && currentScreen != Routes.REGISTER && currentScreen != Routes.SIGNUP && currentScreen != Routes.SECOND_REGISTER && currentScreen != Routes.RECOVER_PASSWORD && currentScreen != Routes.SPLASH_SCREEN){true}else{false}) {
             Row(
                 modifier = modifier,
                 verticalAlignment = Alignment.CenterVertically,

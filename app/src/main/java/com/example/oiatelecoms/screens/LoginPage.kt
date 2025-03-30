@@ -1,5 +1,7 @@
 package com.example.oiatelecoms.screens
 
+import android.content.Context
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -32,8 +35,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -42,9 +47,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.FragmentActivity
+import com.example.oiatelecoms.MainActivity
+import com.example.oiatelecoms.auth.BiometricAuth
 import com.example.oiatelecoms.R
 import com.example.oiatelecoms.ui.theme.OIATELECOMSTheme
-import com.example.oiatelecoms.ui.theme.useAnotherColor
 import com.example.oiatelecoms.ui.theme.useThirdColor
 
 
@@ -53,7 +60,10 @@ fun LoginPage(
     modifier: Modifier = Modifier,
     onLoginClick: ()->Unit,
     onForgotPassWordClick: ()-> Unit,
-    onNewUserClicked:()-> Unit
+    onNewUserClicked:()-> Unit,
+    activity:FragmentActivity,
+    onSuccess: () -> Unit,
+    onFailure: (String) -> Unit
 ){
     var phoneNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -62,7 +72,8 @@ fun LoginPage(
             painter = painterResource(id = R.drawable.istockphoto_1334764353_612x612),
             contentDescription = null,
             modifier = modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+
         )
         Column(
             modifier = modifier
@@ -74,7 +85,7 @@ fun LoginPage(
             Image(
                 painter = painterResource(id = R.drawable.telecompicture),
                 contentDescription = null,
-                modifier = modifier.size(100.dp)
+                modifier = modifier.size(75.dp).clip(CircleShape)
                 )
             Spacer(modifier = modifier.height(10.dp))
             Card(
@@ -109,7 +120,7 @@ fun LoginPage(
                         shape = RoundedCornerShape(20.dp),
                         label = { Text(text = "Phone number")},
                         modifier = modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
                         leadingIcon = {
                             Icon(imageVector = Icons.Default.Call, contentDescription = null)
                         }
@@ -124,7 +135,7 @@ fun LoginPage(
                         leadingIcon = {
                             Icon(imageVector = Icons.Default.Lock, contentDescription = null)
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done)
                     )
                     Spacer(modifier = modifier.padding(4.dp))
                     Button(
@@ -138,6 +149,7 @@ fun LoginPage(
                             color = Color.White
                         )
                     }
+                    BiometricAuth(activity = activity, onSuccess = onSuccess, onFailure = onFailure, modifier = modifier)
                     Column {
                         TextButton(
                             onClick = onForgotPassWordClick
@@ -167,11 +179,15 @@ fun LoginPage(
 @Preview
 @Composable
 fun ShowLoginPreview(){
+
     OIATELECOMSTheme {
-        LoginPage(
-            onLoginClick = {},
-            onForgotPassWordClick = {},
-            onNewUserClicked = {}
-        )
+//        LoginPage(
+//            onLoginClick = {},
+//            onForgotPassWordClick = {},
+//            onNewUserClicked = {},
+//            context = context,
+//            onSuccess = {},
+//            onFailure = {}
+//        )
     }
 }

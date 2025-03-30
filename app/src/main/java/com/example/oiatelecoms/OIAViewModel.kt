@@ -16,7 +16,7 @@ data class UiState(
 )
 
 enum class Routes(val title :String){
-    HOME("Home"),  HISTORY("History"),
+    HOME("Home"),  HISTORY("History"), SPLASH_SCREEN("Splash Screen"),
     PROFILE("Profile"), LOGIN("Login"),
     REGISTER("Register"), SIGNUP("SignUp"),
     RECOVER_PASSWORD("Recover"), BUY_DATA("Buy Data"),

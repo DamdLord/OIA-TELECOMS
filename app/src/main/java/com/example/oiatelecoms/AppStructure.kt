@@ -40,21 +40,26 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.oiatelecoms.data.AirtimeAlertDialog
 import com.example.oiatelecoms.data.ConfirmToLeavePayment
 import com.example.oiatelecoms.data.InputPinCard
+import com.example.oiatelecoms.data.LoginUnSuccessful
 import com.example.oiatelecoms.data.PasswordVerificationFailedDialog
 import com.example.oiatelecoms.screens.AlphaTopPage
 import com.example.oiatelecoms.screens.ReceiptScreen
+import com.example.oiatelecoms.screens.SplashScreen
 
 @Composable
 fun MainApp(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    activity:FragmentActivity
 ){
     var showLeaveOrContinueDialog  by remember { mutableStateOf(false) }
     var showPinVerification  by remember { mutableStateOf(false) }
@@ -70,21 +75,23 @@ fun MainApp(
 
     Scaffold(
        topBar = {
-              TopAppBar(
-                  currentScreen = currentScreen,
-                  onBackPressed = {navController.navigate(Routes.HOME.name)},
-                  onLockClicked = { navController.navigate(Routes.LOGIN.name)},
-                  onNotificationClicked = {}
-              )
+           if (currentScreen != Routes.SPLASH_SCREEN) {
+               TopAppBar(
+                   currentScreen = currentScreen,
+                   onBackPressed = {navController.navigate(Routes.HOME.name)},
+                   onLockClicked = { navController.navigate(Routes.LOGIN.name)},
+                   onNotificationClicked = {}
+               )
+           }
        },
         bottomBar = {
-            AnimatedVisibility(visible = if(currentScreen != Routes.LOGIN && currentScreen != Routes.SIGNUP && currentScreen != Routes.REGISTER  && currentScreen != Routes.SECOND_REGISTER  && currentScreen != Routes.RECOVER_PASSWORD){true}else{false} ) {
+            if(currentScreen != Routes.LOGIN && currentScreen != Routes.SIGNUP && currentScreen != Routes.REGISTER && currentScreen != Routes.SPLASH_SCREEN  && currentScreen != Routes.SECOND_REGISTER  && currentScreen != Routes.RECOVER_PASSWORD) {
                 BottomBar(
                     appViewModel = appViewModel,
                     onTabPressed = { route: Routes ->
                         appViewModel.updateCurrentScreen(route)
-                        navController.navigate(route.name){
-                            popUpTo(navController.graph.startDestinationId){
+                        navController.navigate(route.name) {
+                            popUpTo(navController.graph.startDestinationId) {
                                 saveState = true
                             }
                             launchSingleTop = true
@@ -97,9 +104,12 @@ fun MainApp(
     ){innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Routes.SIGNUP.name,
+            startDestination = Routes.SPLASH_SCREEN.name,
             modifier = modifier.padding(innerPadding)
             ) {
+            composable(route = Routes.SPLASH_SCREEN.name){
+                SplashScreen(navController = navController, context = context)
+            }
             composable(route =Routes.SIGNUP.name){
                 SignUpPage(
                     onRegisterClick = {
@@ -120,9 +130,12 @@ fun MainApp(
             }
             composable(route = Routes.LOGIN.name){
                 LoginPage(
+                    activity = activity,
                     onLoginClick = {
                         if (isInternetAvailable(context = context )) {
-                            navController.navigate(Routes.HOME.name)
+                            navController.navigate(Routes.HOME.name){
+                                popUpTo(Routes.LOGIN.name) {inclusive = true  }
+                            }
                         } else{
                             Toast.makeText(context, "No internet connection. Please check your network.", Toast.LENGTH_LONG).show()
                         }
@@ -140,6 +153,13 @@ fun MainApp(
                         } else{
                             Toast.makeText(context, "No internet connection. Please check your network.", Toast.LENGTH_LONG).show()
                         }
+                    },
+                    onSuccess = {
+                        Toast.makeText(context, "Login Successful.", Toast.LENGTH_LONG).show()
+                        navController.navigate(Routes.HOME.name)
+                    },
+                    onFailure = {
+                        Toast.makeText(context, "Login Unsuccessful.", Toast.LENGTH_LONG).show()
                     }
                 )
             }
@@ -162,6 +182,7 @@ fun MainApp(
                 )
             }
             composable(route = Routes.HOME.name ){
+
                 HomePage(
                     currentBalance = appViewModel.userBalance,
                     onAirtimeClicked = { navController.navigate(Routes.BUY_AIRTIME.name) },
@@ -254,6 +275,7 @@ fun MainApp(
                 appViewModel = appViewModel
             )
         }
+
         if (showPinVerification){
             InputPinCard(
                 amount = appViewModel.amountUserWillPay,

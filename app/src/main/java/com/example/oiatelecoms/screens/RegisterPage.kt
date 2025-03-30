@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -92,6 +93,7 @@ fun RegisterPage(
                        label = {
                                Text(text = "First Name")
                        },
+                       keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
                        leadingIcon = {
                            Icon(imageVector = Icons.Default.Person, contentDescription = null )
                        },
@@ -107,6 +109,7 @@ fun RegisterPage(
                        label = {
                                Text(text = "Last Name")
                        },
+                       keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
                        leadingIcon = {
                                      Icon(imageVector = Icons.Default.Person, contentDescription = null )
                        },

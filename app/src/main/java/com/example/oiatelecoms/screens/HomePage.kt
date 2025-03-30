@@ -2,7 +2,6 @@ package com.example.oiatelecoms.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,18 +14,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Adjust
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.CreditCard
-import androidx.compose.material.icons.filled.Hub
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.PhoneIphone
 import androidx.compose.material.icons.filled.Print
-import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material.icons.filled.QrCode2
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.School
@@ -34,10 +29,8 @@ import androidx.compose.material.icons.filled.Stars
 import androidx.compose.material.icons.filled.SupportAgent
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material.icons.filled.Tv
-import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material.icons.outlined.PhoneIphone
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -45,8 +38,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -62,10 +53,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.oiatelecoms.R
-import com.example.oiatelecoms.TopAppBar
 import com.example.oiatelecoms.adsPackage.AdsRow
 import com.example.oiatelecoms.ui.theme.OIATELECOMSTheme
-import com.example.oiatelecoms.ui.theme.StatusIcon
 import com.example.oiatelecoms.ui.theme.useAnotherColor
 
 @Composable
@@ -82,7 +71,6 @@ fun HomePage(
     onAlphaTopClicked: () -> Unit
 ){
     var showBalance: Boolean by remember { mutableStateOf(false) }
-    val balance = currentBalance
     val commission = 0
     Column(
         modifier = modifier
@@ -117,7 +105,7 @@ fun HomePage(
                     ) {
                         if (showBalance){
                             Text(
-                                text = "₦ ${balance}",
+                                text = "₦ $currentBalance",
                                 color = Color.White,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold
@@ -160,7 +148,7 @@ fun HomePage(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Commission: ${commission} ",
+                        text = "Commission: $commission ",
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
@@ -181,10 +169,10 @@ fun HomePage(
                     OutlinedButton(
                         onClick = { /*TODO*/ },
                         border = BorderStroke(2.dp, Color.White),
-                        modifier = modifier.size(140.dp, 40.dp)
+                        modifier = modifier.size(135.dp, 40.dp)
                     ){
                         Row(
-                            modifier = modifier,
+                            modifier = modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
@@ -195,7 +183,7 @@ fun HomePage(
                             Text(
                                 text = "Add Money",
                                 color = Color.White,
-                                fontSize = 13.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold
                                 )
                         }
@@ -203,10 +191,10 @@ fun HomePage(
                     OutlinedButton(
                         onClick = { /*TODO*/ },
                         border = BorderStroke(2.dp, Color.White),
-                        modifier = modifier.size(125.dp, 40.dp)
+                        modifier = modifier.size(115.dp, 40.dp)
                         ) {
                         Row(
-                            modifier = modifier,
+                            modifier = modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
@@ -217,7 +205,7 @@ fun HomePage(
                             Text(
                                 text = "Transfer",
                                 color = Color.White,
-                                fontSize = 13.sp,
+                                fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold
                                 )
                         }
@@ -225,11 +213,11 @@ fun HomePage(
                     OutlinedButton(
                         onClick = { /*TODO*/ },
                         border = BorderStroke(2.dp, Color.White),
-                        modifier = modifier.size(140.dp, 40.dp)
+                        modifier = modifier.size(135.dp, 40.dp)
 
                         ) {
                         Row(
-                            modifier = modifier,
+                            modifier = modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
@@ -241,7 +229,7 @@ fun HomePage(
                             Text(
                                 text = "Referrals",
                                 color = Color.White,
-                                fontSize = 10.sp,
+                                fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold
                                 )
                         }
@@ -597,7 +585,7 @@ fun HomePage(
                             border = BorderStroke(width = 2.dp, color = useAnotherColor)
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.List,
+                                imageVector = Icons.AutoMirrored.Filled.List,
                                 contentDescription = "Price List",
                                 modifier = modifier
                                     .size(45.dp)
@@ -697,7 +685,7 @@ fun HomePage(
 fun ShowHome(){
     OIATELECOMSTheme {
         HomePage(
-            currentBalance = "70000000",
+            currentBalance = "700000",
             onAirtimeClicked = {},
             onDataClicked = {},
             onElectricityClicked = {},
