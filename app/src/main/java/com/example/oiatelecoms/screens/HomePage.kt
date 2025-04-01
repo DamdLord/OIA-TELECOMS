@@ -85,7 +85,7 @@ fun HomePage(
             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)
         ) {
             Column(
-                modifier = modifier.padding(10.dp)
+                modifier = modifier.padding(10.dp).fillMaxSize()
             ) {
                 Text(
                     text = "Available Balance",
@@ -246,6 +246,7 @@ fun HomePage(
             Column(
                 modifier = modifier
                     .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(4.dp),
             ) {
                 // first icon on row 1

@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
 }
 
 android {
@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json.v160)
 
     // Admob
     //implementation("com.google.android.gms:play-services-ads:23.6.0")
@@ -83,6 +84,8 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.coil.kt.coil.compose)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.runner)
+    implementation(libs.androidx.espresso.core)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -13,10 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Person2
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -32,7 +29,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,13 +42,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.oiatelecoms.DBViewModel
 import com.example.oiatelecoms.R
 import com.example.oiatelecoms.data.States
-import com.example.oiatelecoms.ui.theme.OIATELECOMSTheme
-import com.example.oiatelecoms.ui.theme.useAnotherColor
 import com.example.oiatelecoms.ui.theme.useThirdColor
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,11 +54,16 @@ import com.example.oiatelecoms.ui.theme.useThirdColor
 fun SecondRegisterPage(
     modifier: Modifier = Modifier,
     onRegisterDoneClicked:()->Unit,
-    onIHaveAnAccountAlreadySoLoginNow:()->Unit
+    onIHaveAnAccountAlreadySoLoginNow:()->Unit,
+    dbViewModel: DBViewModel
 ){
     val stateList = States.listOfStates
     var selectedState by remember{ mutableStateOf(stateList[0]) }
     var isStateDropdownExpanded by remember { mutableStateOf(false) }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var pin by remember { mutableStateOf("") }
+    var referral by remember { mutableStateOf("") }
     Box {
         Image(
             painter = painterResource(id = R.drawable.istockphoto_1334764353_612x612),
@@ -135,8 +134,11 @@ fun SecondRegisterPage(
                     }
                     Spacer(modifier = modifier.height(10.dp))
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = password,
+                        onValueChange = {
+                            password = it
+                            dbViewModel.updatePassword(it)
+                                        },
                         label = {
                             Text(text = "Password")
                         },
@@ -150,8 +152,8 @@ fun SecondRegisterPage(
                     )
                     Spacer(modifier = modifier.height(10.dp))
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = confirmPassword,
+                        onValueChange = { confirmPassword = it},
                         label = {
                             Text(text = "Confirm Password")
                         },
@@ -162,10 +164,17 @@ fun SecondRegisterPage(
                         colors = OutlinedTextFieldDefaults.colors(useThirdColor),
                         modifier = modifier.fillMaxWidth()
                     )
+                    Spacer(modifier = modifier.height(5.dp))
+                    if (password != confirmPassword && confirmPassword.isNotEmpty()) {
+                        Text(text = "Password does not much")
+                    }
                     Spacer(modifier = modifier.height(10.dp))
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = pin,
+                        onValueChange = {
+                            pin = it
+                            dbViewModel.updatePin(it.toInt())
+                                        },
                         label = {
                             Text(text = "Pin")
                         },
@@ -179,8 +188,8 @@ fun SecondRegisterPage(
                     )
                     Spacer(modifier = modifier.height(10.dp))
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = referral,
+                        onValueChange = { referral = it},
                         label = {
                             Text(text = "Referral")
                         },
@@ -223,13 +232,15 @@ fun SecondRegisterPage(
 }
 
 
-@Preview
-@Composable
-fun ShowSecondRegister(){
-    OIATELECOMSTheme {
-        SecondRegisterPage(
-            onRegisterDoneClicked = {},
-            onIHaveAnAccountAlreadySoLoginNow = {}
-        )
-    }
-}
+//@Preview
+//@Composable
+//fun ShowSecondRegister(){
+//    val dbVM = DBViewModel()
+//    OIATELECOMSTheme {
+//        SecondRegisterPage(
+//            onRegisterDoneClicked = {},
+//            onIHaveAnAccountAlreadySoLoginNow = {},
+//            dbViewModel = dbVM
+//        )
+//    }
+//}

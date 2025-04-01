@@ -1,7 +1,6 @@
 package com.example.oiatelecoms.screens
 
-import android.content.Context
-import androidx.activity.ComponentActivity
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -48,7 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
-import com.example.oiatelecoms.MainActivity
+import com.example.oiatelecoms.OIAViewModel
 import com.example.oiatelecoms.auth.BiometricAuth
 import com.example.oiatelecoms.R
 import com.example.oiatelecoms.ui.theme.OIATELECOMSTheme
@@ -63,7 +61,8 @@ fun LoginPage(
     onNewUserClicked:()-> Unit,
     activity:FragmentActivity,
     onSuccess: () -> Unit,
-    onFailure: (String) -> Unit
+    onFailure: (String) -> Unit,
+    oiaViewModel: OIAViewModel
 ){
     var phoneNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -115,7 +114,10 @@ fun LoginPage(
                     Spacer(modifier = modifier.padding(6.dp))
                     OutlinedTextField(
                         value = phoneNumber,
-                        onValueChange ={ phoneNumber = it},
+                        onValueChange ={
+                            phoneNumber = it
+                            oiaViewModel.updateCurrentPhoneNumber(it)
+                                       },
                         colors = OutlinedTextFieldDefaults.colors(useThirdColor),
                         shape = RoundedCornerShape(20.dp),
                         label = { Text(text = "Phone number")},
@@ -128,7 +130,10 @@ fun LoginPage(
                     Spacer(modifier = modifier.padding(4.dp))
                     OutlinedTextField(
                         value = password,
-                        onValueChange = { password = it},
+                        onValueChange = {
+                            password = it
+                            oiaViewModel.updateCurrentPassword(it)
+                                        },
                         shape = RoundedCornerShape(20.dp),
                         modifier = modifier.fillMaxWidth(),
                         label = { Text(text = "Password")},
@@ -165,7 +170,7 @@ fun LoginPage(
                                 text = "New User? Create Account",
                                 color = Color.Black,
                                 fontSize = 20.sp
-                                )
+                            )
                         }
                     }
                 }

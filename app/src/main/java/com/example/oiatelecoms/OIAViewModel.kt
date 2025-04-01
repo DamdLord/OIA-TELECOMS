@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.update
 
 
 data class UiState(
-    var currentUserName:String = "",
+    var currentPhoneNumber:String = "",
     var currentPassword:String = "",
     var currentScreen:Routes = Routes.HOME,
 )
@@ -166,6 +166,19 @@ class OIAViewModel : ViewModel(){
             it.copy(
                 currentScreen = routes
             )
+        }
+    }
+
+    fun updateCurrentPhoneNumber(firstName: String){
+        _uiState.update {
+            it.copy(
+                currentPhoneNumber =  firstName
+            )
+        }
+    }
+    fun updateCurrentPassword(password: String){
+        _uiState.update {
+            it.copy( currentPassword = password)
         }
     }
 

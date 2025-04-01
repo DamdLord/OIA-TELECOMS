@@ -1,6 +1,5 @@
 package com.example.oiatelecoms
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
@@ -40,7 +39,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.widget.Toast
-import androidx.activity.ComponentActivity
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -50,12 +49,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.oiatelecoms.data.AirtimeAlertDialog
 import com.example.oiatelecoms.data.ConfirmToLeavePayment
 import com.example.oiatelecoms.data.InputPinCard
-import com.example.oiatelecoms.data.LoginUnSuccessful
 import com.example.oiatelecoms.data.PasswordVerificationFailedDialog
 import com.example.oiatelecoms.screens.AlphaTopPage
 import com.example.oiatelecoms.screens.ReceiptScreen
 import com.example.oiatelecoms.screens.SplashScreen
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainApp(
     modifier: Modifier = Modifier,
@@ -66,40 +65,50 @@ fun MainApp(
     var showDialog  by remember { mutableStateOf(false) }
     var showDialogIfPasswordIsWrong  by remember { mutableStateOf(false) }
     val appViewModel : OIAViewModel = viewModel()
+    val dbViewModel: DBViewModel = viewModel(factory = DBViewModel.factory)
     val navController: NavHostController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = Routes.valueOf(
         backStackEntry?.destination?.route ?: Routes.HOME.name
     )
+    val uiState = appViewModel.uiState.collectAsState().value
+    val user = dbViewModel.user.collectAsState().value
     val context = LocalContext.current
 
     Scaffold(
        topBar = {
-           if (currentScreen != Routes.SPLASH_SCREEN) {
-               TopAppBar(
-                   currentScreen = currentScreen,
-                   onBackPressed = {navController.navigate(Routes.HOME.name)},
-                   onLockClicked = { navController.navigate(Routes.LOGIN.name)},
-                   onNotificationClicked = {}
-               )
-           }
+           androidx.compose.material3.TopAppBar(
+               title = {
+                   if (currentScreen != Routes.SPLASH_SCREEN) {
+                       TopAppBar(
+                           currentScreen = currentScreen,
+                           onBackPressed = {navController.navigate(Routes.HOME.name)},
+                           onLockClicked = { navController.navigate(Routes.LOGIN.name)},
+                           onNotificationClicked = {}
+                       )
+                   }
+               }
+           )
        },
         bottomBar = {
-            if(currentScreen != Routes.LOGIN && currentScreen != Routes.SIGNUP && currentScreen != Routes.REGISTER && currentScreen != Routes.SPLASH_SCREEN  && currentScreen != Routes.SECOND_REGISTER  && currentScreen != Routes.RECOVER_PASSWORD) {
-                BottomBar(
-                    appViewModel = appViewModel,
-                    onTabPressed = { route: Routes ->
-                        appViewModel.updateCurrentScreen(route)
-                        navController.navigate(route.name) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
+            if (currentScreen != Routes.LOGIN && currentScreen != Routes.SIGNUP && currentScreen != Routes.REGISTER && currentScreen != Routes.SPLASH_SCREEN  && currentScreen != Routes.SECOND_REGISTER  && currentScreen != Routes.RECOVER_PASSWORD) {
+                BottomAppBar {
+                    BottomBar(
+                        appViewModel = appViewModel,
+                        onTabPressed = { route: Routes ->
+                            appViewModel.updateCurrentScreen(route)
+                            navController.navigate(route.name) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
-                    }
-                )
+                    )
+                }
             }
+
         }
     ){innerPadding ->
         NavHost(
@@ -131,10 +140,17 @@ fun MainApp(
             composable(route = Routes.LOGIN.name){
                 LoginPage(
                     activity = activity,
+                    oiaViewModel = appViewModel,
                     onLoginClick = {
                         if (isInternetAvailable(context = context )) {
-                            navController.navigate(Routes.HOME.name){
-                                popUpTo(Routes.LOGIN.name) {inclusive = true  }
+                            dbViewModel.loginUser(phoneNumber = uiState.currentPhoneNumber, password = uiState.currentPassword){ resultMessage ->
+                                if (resultMessage.startsWith("Welcome")) {
+                                    navController.navigate(Routes.HOME.name){
+                                        popUpTo(Routes.LOGIN.name) {inclusive = true  }
+                                    }
+                                } else {
+                                    Toast.makeText(context, resultMessage, Toast.LENGTH_SHORT).show()
+                                }
                             }
                         } else{
                             Toast.makeText(context, "No internet connection. Please check your network.", Toast.LENGTH_LONG).show()
@@ -165,6 +181,7 @@ fun MainApp(
             }
             composable(route = Routes.REGISTER.name){
                 RegisterPage(
+                    dbViewModel = dbViewModel,
                     onContinueClick = {
                         if (isInternetAvailable(context = context )) {
                             navController.navigate(Routes.SECOND_REGISTER.name)
@@ -204,7 +221,22 @@ fun MainApp(
             }
             composable(route = Routes.SECOND_REGISTER.name){
                 SecondRegisterPage(
-                    onRegisterDoneClicked = { navController.navigate(Routes.HOME.name)},
+                    dbViewModel = dbViewModel,
+                    onRegisterDoneClicked = {
+                        if(isInternetAvailable(context = context)){
+                            dbViewModel.registerUser(user = user){ resultMessage ->
+                                if (resultMessage == "User registered successfully!") {
+                                    navController.navigate(Routes.LOGIN.name){
+                                        popUpTo(Routes.SECOND_REGISTER.name) {inclusive = true  }
+                                    }
+                                } else {
+                                    Toast.makeText(context, resultMessage, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }else{
+                            Toast.makeText(context, "No internet connection. Please check your network.", Toast.LENGTH_LONG).show()
+                        }
+                    },
                     onIHaveAnAccountAlreadySoLoginNow = { navController.navigate(Routes.LOGIN.name)}
                 )
             }

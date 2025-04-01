@@ -1,23 +1,19 @@
 package com.example.oiatelecoms
 
-import android.app.Notification
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
@@ -27,18 +23,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
-import com.example.oiatelecoms.screens.CableTVPage
 import com.example.oiatelecoms.ui.theme.OIATELECOMSTheme
 import com.example.oiatelecoms.ui.theme.useAnotherColor
 
@@ -70,36 +62,30 @@ fun TopAppBar(
 ){
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround,
+        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
             .fillMaxWidth()
-            .padding(5.dp)
+            .padding(15.dp)
             //.padding(top = 20.dp, start = 5.dp, end = 5.dp, bottom = 5.dp)
     ) {
-        AnimatedVisibility(visible = if(currentScreen != Routes.HOME && currentScreen != Routes.LOGIN && currentScreen != Routes.REGISTER && currentScreen != Routes.SIGNUP && currentScreen != Routes.SECOND_REGISTER && currentScreen != Routes.RECOVER_PASSWORD && currentScreen != Routes.HISTORY && currentScreen != Routes.PROFILE ){ true} else{false}) {
+        AnimatedVisibility(visible = currentScreen != Routes.HOME && currentScreen != Routes.LOGIN && currentScreen != Routes.REGISTER && currentScreen != Routes.SIGNUP && currentScreen != Routes.SECOND_REGISTER && currentScreen != Routes.RECOVER_PASSWORD && currentScreen != Routes.HISTORY && currentScreen != Routes.PROFILE) {
             IconButton(onClick = onBackPressed) {
                 Icon(
-                    imageVector = Icons.Default.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription ="Back",
                     modifier = modifier.size(35.dp),
                     tint = useAnotherColor
                     )
             }
         }
-        Image(
-            painter = painterResource(id = R.drawable.telecompicture),
-            contentScale = ContentScale.Crop,
-            contentDescription = null,
-            modifier =  modifier.size(50.dp).clip(CircleShape)
-        )
-        Spacer(modifier = modifier.width(10.dp))
+
         Text(
             text = "OIA TELECOMS",
             fontWeight = FontWeight.Bold,
-            fontSize = 22.sp
+            textAlign = TextAlign.Center,
+            fontSize = 25.sp
         )
-        Spacer(modifier = modifier.width(5.dp))
-        AnimatedVisibility(visible = if (currentScreen != Routes.LOGIN && currentScreen != Routes.REGISTER && currentScreen != Routes.SIGNUP && currentScreen != Routes.SECOND_REGISTER && currentScreen != Routes.RECOVER_PASSWORD && currentScreen != Routes.SPLASH_SCREEN){true}else{false}) {
+        AnimatedVisibility(visible = currentScreen != Routes.LOGIN && currentScreen != Routes.REGISTER && currentScreen != Routes.SIGNUP && currentScreen != Routes.SECOND_REGISTER && currentScreen != Routes.RECOVER_PASSWORD && currentScreen != Routes.SPLASH_SCREEN) {
             Row(
                 modifier = modifier,
                 verticalAlignment = Alignment.CenterVertically,
@@ -113,6 +99,7 @@ fun TopAppBar(
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
+                Spacer(modifier = modifier.width(10.dp))
                 IconButton(onClick = onNotificationClicked) {
                     Icon(
                         imageVector = Icons.Default.Notifications,

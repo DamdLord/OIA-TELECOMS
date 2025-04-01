@@ -27,6 +27,10 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,20 +40,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.oiatelecoms.DBViewModel
 import com.example.oiatelecoms.R
-import com.example.oiatelecoms.ui.theme.OIATELECOMSTheme
-import com.example.oiatelecoms.ui.theme.useAnotherColor
 import com.example.oiatelecoms.ui.theme.useThirdColor
 
 @Composable
 fun RegisterPage(
     modifier: Modifier = Modifier,
     onContinueClick: ()->Unit,
-    onLoginClick:()->Unit
+    onLoginClick:()->Unit,
+    dbViewModel: DBViewModel
 ){
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
+    var email by remember{ mutableStateOf("") }
    Box {
        Image(
            painter = painterResource(id = R.drawable.istockphoto_1334764353_612x612),
@@ -88,8 +95,10 @@ fun RegisterPage(
                        )
                    Spacer(modifier = modifier.height(10.dp))
                    OutlinedTextField(
-                       value = "",
-                       onValueChange = {},
+                       value = firstName,
+                       onValueChange = {
+                           firstName = it
+                           dbViewModel.updateFirstName(it) },
                        label = {
                                Text(text = "First Name")
                        },
@@ -104,8 +113,11 @@ fun RegisterPage(
                    )
                    Spacer(modifier = modifier.height(10.dp))
                    OutlinedTextField(
-                       value = "",
-                       onValueChange = {},
+                       value = lastName,
+                       onValueChange = {
+                           lastName = it
+                           dbViewModel.updateLastName(it)
+                                       },
                        label = {
                                Text(text = "Last Name")
                        },
@@ -119,8 +131,11 @@ fun RegisterPage(
                    )
                    Spacer(modifier = modifier.height(10.dp))
                    OutlinedTextField(
-                       value = "",
-                       onValueChange = {},
+                       value = phone,
+                       onValueChange = {
+                           phone = it
+                           dbViewModel.updatePhoneNumber(it)
+                                       },
                        label = {
                                Text(text = "Phone")
                        },
@@ -134,8 +149,11 @@ fun RegisterPage(
                    )
                    Spacer(modifier = modifier.height(10.dp))
                    OutlinedTextField(
-                       value = "",
-                       onValueChange = {},
+                       value = email,
+                       onValueChange = {
+                           email = it
+                           dbViewModel.updateEmail(it)
+                                       },
                        label = {
                                Text(text = "Email")
                        },
@@ -179,13 +197,15 @@ fun RegisterPage(
 
 
 
-@Preview(showBackground = true)
-@Composable
-fun RegisterPagePreview(){
-    OIATELECOMSTheme {
-        RegisterPage(
-            onContinueClick = {},
-            onLoginClick = {}
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun RegisterPagePreview(){
+//    val dbVM = DBViewModel()
+//    OIATELECOMSTheme {
+//        RegisterPage(
+//            onContinueClick = {},
+//            onLoginClick = {},
+//            dbViewModel = dbVM
+//        )
+//    }
+//}
